@@ -1,0 +1,20 @@
+﻿@model List<MapsGuides.Data.Dot> 
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<h1 class="display-4">Welcome</h1>
+<input type="search" id="search_btn" placeholder="Search..."/>
+<div class="container">
+    <div class="row">
+        <div class="col-1" id="dot-list">
+            List:
+        </div>
+        <div class="col m-lg-4" id="osm-map"></div>
+    </div>
+</div>
+<div class="text-center">
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
