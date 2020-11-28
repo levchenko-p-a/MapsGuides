@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\leaflet-contextmenu\**" />
+    <Content Remove="wwwroot\leaflet-contextmenu\**" />
+    <EmbeddedResource Remove="wwwroot\leaflet-contextmenu\**" />
+    <None Remove="wwwroot\leaflet-contextmenu\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />

@@ -30,10 +30,10 @@ function GetMap() {
     var target = L.latLng('47.09594298223346', '37.549585103988655');
 
     // Set map's center to target with zoom 14.
-    map.setView(target, 14);
+    map.setView(target, 16);
 
     // Place a marker on the same location.
-    L.marker(target).addTo(map);
+    //L.marker(target).addTo(map);
 }
 function setDotCoord(map) {
     map.on('contextmenu', (e) => {
@@ -47,41 +47,64 @@ function setDotCoord(map) {
     });
 }
 function getAllDots(map) {
-    var actionUrl = '/Home/GetData';
+    var dataUrl = '/Home/GetData';
 
     $.ajax({
         type: 'POST',
         dataType: 'json',
         cache: false,
-        url: actionUrl,
+        url: dataUrl,
         success: function (dots, textStatus, jqXHR) {
             var container = document.getElementById('dot-list');
             container.innerHTML = '';
+            var base_url = window.location.origin+"/";
             for (var i = 0; i < dots.length; i++) {
                 var d = dots[i];
+                d.thumbFile = base_url + d.thumbFile;
                 var target = L.latLng(d.latitude, d.longitude);
                 var icon = L.icon({
                     iconUrl: d.thumbFile,
                     iconSize: [40, 40]
                 });
-                var marker = L.marker(target, {
-                    id: d.thumbFile,
-                    icon: icon
-                });
-                marker.on("click", function (e) {
-                    console.log(e.sourceTarget.options.id);
-                });
+
+                var opts = {
+                    icon: icon,
+                    dot: d
+                };
+                var marker = L.marker(target, opts);
+                
                 marker.addTo(map);
                 var elem = document.createElement("button");
                 elem.textContent = d.title;
                 elem.classList.add('row', 'btn', 'btn-primary');
                 container.appendChild(elem);
+
+                marker.on("click", function (e) {
+                    L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(popupContent(e.sourceTarget.options.dot))
+                        .openOn(map);
+                });
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log('Error - ' + errorThrown);
         }
     });
+}
+function popupContent(d) {
+    let json = JSON.stringify(d.id);
+    var editUrl = '/Home/EditDot?id=' + encodeURIComponent(json);
+    var content = 
+        '<h2>' + d.title + '</h2>' +
+        '<div>' + d.description + '</div>' +
+        '<a href="tel:' + d.phone + '" >Phone</a>' +
+        '<br>'+
+        '<a href="mailto:' + d.email + '" >Email</a>' +
+        '<img src="' + d.thumbFile + '" width="100" height="100" alt="image">' +
+    '<a href="' + editUrl + '" type="application/json" class="ui-btn ui-corner-all" >Edit</a>'
+    ;
+    return content;
 }
 
 class Dot {
