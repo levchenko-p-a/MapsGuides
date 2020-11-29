@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import PageSignUp from 'pages/SignUp';
 import PageSignIn from 'pages/SignIn';
+import PagePayment from 'pages/Payment';
 import * as page from 'consts/page.js';
 import GlobalStyles from './globalStyles.js';
 
@@ -25,6 +26,11 @@ render(<ThemeProvider theme={{}}>
 					exact 
 					path={page.PAGE_SIGN_IN}>
 					<PageSignIn />
+				</Route>
+				<Route
+					exact 
+					path={page.PAGE_PAYMENT}>
+					<PagePayment />
 				</Route>
 			</Switch>
 		</BrowserRouter>
