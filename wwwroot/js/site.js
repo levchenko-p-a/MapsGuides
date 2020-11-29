@@ -4,19 +4,27 @@
 // Write your JavaScript code.
 $(document).ready(function () {
     GetMap();
+    var search_btn = document.getElementById('search_btn');
+    search_btn.addEventListener('click', onSearch)
 });
 
+function onSearch() {
+    var search_inp = document.getElementById('search_inp');
+    var osm = document.getElementById('osm-map');
+    if (osm == null || search_btn.nodeValue==null) { return; }
+    getAllDots(L.map(osm), search_inp.nodeValue);
+}
 // Функция загрузки карты
 function GetMap() {
     // Where you want to render the map.
-    var element = document.getElementById('osm-map');
-    if (element == null) { return;}
+    var osm = document.getElementById('osm-map');
+    if (osm == null) { return;}
     // Height has to be set. You can do this in CSS too.
-    element.style = 'height:600px;';
-    element.style.cursor = 'crosshair';
+    osm.style = 'height:600px;';
+    osm.style.cursor = 'crosshair';
 
     // Create Leaflet map on map element.
-    var map = L.map(element);
+    var map = L.map(osm);
     setDotCoord(map);
 
     // Add OSM tile leayer to the Leaflet map.
@@ -46,7 +54,7 @@ function setDotCoord(map) {
             .openOn(map);
     });
 }
-function getAllDots(map) {
+function getAllDots(map, search="") {
     var dataUrl = '/Home/GetData';
 
     $.ajax({
@@ -54,6 +62,7 @@ function getAllDots(map) {
         dataType: 'json',
         cache: false,
         url: dataUrl,
+        data: { text: search},
         success: function (dots, textStatus, jqXHR) {
             var container = document.getElementById('dot-list');
             container.innerHTML = '';

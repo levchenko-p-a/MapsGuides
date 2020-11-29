@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using System.Drawing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MapsGuides.Controllers
 {
@@ -23,9 +24,9 @@ namespace MapsGuides.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _appEnvironment;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, 
-            IWebHostEnvironment appEnvironment, UserManager<IdentityUser> userManager)
+            IWebHostEnvironment appEnvironment, UserManager<User> userManager)
         {
             _logger = logger;
             _context = context;
@@ -40,7 +41,7 @@ namespace MapsGuides.Controllers
         }
         public async Task<IActionResult> DeleteDot(int id)
         {
-            Dot dot = _context.Dots.FirstOrDefault(d => d.Id == id);
+            Dot dot = _context.Dots.FirstOrDefault(d => d.id == id);
             _context.Entry(dot).State = EntityState.Detached;
             _context.Dots.Remove(dot);
             await _context.SaveChangesAsync();
@@ -49,77 +50,33 @@ namespace MapsGuides.Controllers
         public IActionResult EditDot(string id)
         {
             int dotId = JsonConvert.DeserializeObject<int>(HttpUtility.UrlDecode(id));
-            Dot dot = _context.Dots.FirstOrDefault(d => d.Id == dotId);
+            Dot dot = _context.Dots.FirstOrDefault(d => d.id == dotId);
             return View(dot);
-        }
-        [HttpPost]
-        public async Task<IActionResult> EditDot(Dot dot, IFormFile thumbFile)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    if (thumbFile != null && thumbFile.ContentType.Contains("image"))
-                    {
-                        var uploadedFileExtension = Path.GetExtension(thumbFile.FileName);
-                        var fileName = Path.GetRandomFileName() + uploadedFileExtension;
-                        var mappedPath = Path.Combine(_appEnvironment.WebRootPath, "Files", DateTime.Now.ToShortDateString());
-                        Directory.CreateDirectory(mappedPath);
-                        var filePath = Path.Combine(mappedPath, fileName);
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await thumbFile.CopyToAsync(fileStream);
-                        }
-                        Dot oldDot = _context.Dots.FirstOrDefault(d => d.Id == dot.Id);
-                        var oldThumb = Path.Combine(_appEnvironment.WebRootPath, oldDot.ThumbFile);
-                        System.IO.File.Delete(oldThumb);
-                        dot.ThumbName = Path.GetFileName(thumbFile.FileName);
-                        string webPath = Path.GetRelativePath(_appEnvironment.WebRootPath, filePath).Replace(@"\", "/");
-                        dot.ThumbFile = Url.Content(webPath);
-                        _context.Entry(oldDot).State = EntityState.Detached;
-                        ViewBag.FileStatus = "File uploaded successfully.";
-                    }
-                    else
-                    {
-                        ViewBag.FileStatus = "File is not image";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.FileStatus = ex.StackTrace;
-                    return View(dot);
-                }
-                _context.Dots.Update(dot);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                return View(dot);
-            }
         }
         public async Task<IActionResult> SetDot(string data)
         {
             LatLng coords = JsonConvert.DeserializeObject<LatLng>(HttpUtility.UrlDecode(data).ToString());
             var user = await _userManager.GetUserAsync(User);
-            Dot dot = new Dot();
+            DotModel dm = new DotModel();
             if (user != null)
             {
-                dot.User = user.UserName;
-                dot.Phone = user.PhoneNumber;
-                dot.Email = user.Email;
+                dm.user = user.UserName;
+                dm.phone = user.PhoneNumber;
+                dm.email = user.Email;
             }
-            dot.Latitude = coords.latitude;
-            dot.Longitude = coords.longitude;
-            return View(dot);
+            dm.latitude = coords.latitude;
+            dm.longitude = coords.longitude;
+            ViewBag.Categoryes = new SelectList(_context.Categories, "id", "name");
+            return View(dm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetDot(Dot dot, IFormFile thumbFile)
+        public async Task<IActionResult> SetDot(DotModel dm, IFormFile thumbFile)
         {
             if (ModelState.IsValid)
             {
+                Dot dot = null;
                 try
                 {
                     if (thumbFile != null && thumbFile.ContentType.Contains("image"))
@@ -133,10 +90,18 @@ namespace MapsGuides.Controllers
                         {
                             await thumbFile.CopyToAsync(fileStream);
                         }
-                        dot.ThumbName = Path.GetFileName(thumbFile.FileName);
+                        Dot oldDot = _context.Dots.FirstOrDefault(d => d.id == dm.dot_id);
+                        if (oldDot != null)
+                        {
+                            var oldThumb = Path.Combine(_appEnvironment.WebRootPath, oldDot.thumb_file);
+                            System.IO.File.Delete(oldThumb);
+                            _context.Entry(oldDot).State = EntityState.Detached;
+                        }
+                        dot=dm.createDot(oldDot);
+                        dot.thumb_name = Path.GetFileName(thumbFile.FileName);
                         //var baseUri = this.Request.Host.Host.ToString();
                         string webPath = Path.GetRelativePath(_appEnvironment.WebRootPath, filePath).Replace(@"\", "/");
-                        dot.ThumbFile = Url.Content(webPath); ;
+                        dot.thumb_file = Url.Content(webPath); ;
                         ViewBag.FileStatus = "File uploaded successfully.";
                     }
                     else
@@ -149,19 +114,29 @@ namespace MapsGuides.Controllers
                     ViewBag.FileStatus = ex.StackTrace;
                     return View(dot);
                 }
-                _context.Dots.Add(dot);
-                await _context.SaveChangesAsync();
+                if (dot != null)
+                {
+                    _context.Dots.Add(dot);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction("Index");
             }
             else
             {
-                return View(dot);
+                return View(dm);
             }
         }
         //возвращаем все точки на карте
-        public JsonResult GetData()
+        public JsonResult GetData(string text)
         {
-            List<Dot> dots = _context.Dots.ToList();
+            List<Dot> dots = new List<Dot>();
+            
+            if(text != null)
+            {
+                dots = _context.Dots.Where(d => d.title == text).ToList();
+            }
+            dots = _context.Dots.ToList();
             return Json(dots);
         }
         public IActionResult Privacy()

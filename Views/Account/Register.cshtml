@@ -1,0 +1,49 @@
+﻿@model MapsGuides.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Регистрация нового пользователя</h2>
+<form method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="phone"></label><br />
+        <input asp-for="phone" />
+        <span asp-validation-for="phone"></span>
+    </div>
+    <div>
+        <label asp-for="email"></label><br />
+        <input asp-for="email" />
+        <span asp-validation-for="email"></span>
+    </div>
+    <div>
+        <label asp-for="login"></label><br />
+        <input asp-for="login" />
+        <span asp-validation-for="login"></span>
+    </div>
+    <div>
+        <label asp-for="first_name"></label><br />
+        <input asp-for="first_name" />
+        <span asp-validation-for="first_name"></span>
+    </div>
+    <div>
+        <label asp-for="second_name"></label><br />
+        <input asp-for="second_name" />
+        <span asp-validation-for="second_name"></span>
+    </div>
+    <div>
+        <label asp-for="password"></label><br />
+        <input asp-for="password" />
+        <span asp-validation-for="password"></span>
+    </div>
+    <div>
+        <label asp-for="password_confirm"></label><br />
+        <input asp-for="password_confirm" />
+        <span asp-validation-for="password_confirm"></span>
+    </div>
+    <div>
+        <input type="submit" value="Регистрация" />
+    </div>
+</form>

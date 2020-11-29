@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\**" />
     <Compile Remove="wwwroot\leaflet-contextmenu\**" />
+    <Content Remove="Areas\**" />
     <Content Remove="wwwroot\leaflet-contextmenu\**" />
+    <EmbeddedResource Remove="Areas\**" />
     <EmbeddedResource Remove="wwwroot\leaflet-contextmenu\**" />
+    <None Remove="Areas\**" />
     <None Remove="wwwroot\leaflet-contextmenu\**" />
   </ItemGroup>
 
