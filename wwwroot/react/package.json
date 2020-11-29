@@ -1,0 +1,49 @@
+{
+  "name": "MapsGuides",
+  "version": "1.0.0",
+  "description": "MapsGuides",
+  "main": "index.jsx",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/levchenko-p-a/MapsGuides.git"
+  },
+  "keywords": [
+    "constructor"
+  ],
+  "author": "1991",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "axios": "^0.19.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-google-login": "^5.1.25",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.4.4",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.4.1"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+    "esdoc-jsx-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "typescript": "^3.7.4"
+  }
+}
