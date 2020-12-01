@@ -51,7 +51,21 @@ namespace MapsGuides.Controllers
         {
             int dotId = JsonConvert.DeserializeObject<int>(HttpUtility.UrlDecode(id));
             Dot dot = _context.Dots.FirstOrDefault(d => d.id == dotId);
-            return View(dot);
+            DotModel dm = new DotModel();
+            dm.category_id = dot.category_id;
+            dm.city = dot.city;
+            dm.description = dot.description;
+            dm.dot_id = dot.id;
+            dm.email = dot.email;
+            dm.latitude = dot.latitude;
+            dm.longitude = dot.longitude;
+            dm.phone = dot.phone;
+            dm.time_close = dot.time_close;
+            dm.time_open = dot.time_open;
+            dm.title = dot.title;
+            dm.website = dot.website;
+            ViewBag.Categoryes = new SelectList(_context.Categories, "id", "name", dm.category_id);
+            return View("SetDot", dm);
         }
         public async Task<IActionResult> SetDot(string data)
         {
@@ -98,6 +112,7 @@ namespace MapsGuides.Controllers
                             _context.Entry(oldDot).State = EntityState.Detached;
                         }
                         dot=dm.createDot(oldDot);
+                        dot.category_id = dm.category_id;
                         dot.thumb_name = Path.GetFileName(thumbFile.FileName);
                         //var baseUri = this.Request.Host.Host.ToString();
                         string webPath = Path.GetRelativePath(_appEnvironment.WebRootPath, filePath).Replace(@"\", "/");
@@ -116,6 +131,8 @@ namespace MapsGuides.Controllers
                 }
                 if (dot != null)
                 {
+                    var user = await _userManager.GetUserAsync(User);
+                    dot.user_id = user.Id;
                     _context.Dots.Add(dot);
                     await _context.SaveChangesAsync();
                 }

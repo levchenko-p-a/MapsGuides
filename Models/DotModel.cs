@@ -37,9 +37,11 @@ namespace MapsGuides.Models
         [Display(Name = "Изображение")]
         public String thumb { get; set; }
         [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:00}", ApplyFormatInEditMode = true)]
         [Display(Name = "Время открытия")]
         public DateTime time_open { get; set; }
         [DataType(DataType.Time)]
+        [DisplayFormat(DataFormatString = "{0:00}", ApplyFormatInEditMode = true)]
         [Display(Name = "Время закрытия")]
         public DateTime time_close { get; set; }
         [DataType(DataType.Url)]

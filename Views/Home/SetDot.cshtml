@@ -5,9 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>SetDot</h1>
-
-<h4>Dot</h4>
+<h4>Точка</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,12 +32,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="time_open" class="control-label"></label>
-                <input asp-for="time_open" class="form-control" type="time" />
+                <input asp-for="time_open" class="form-control" />
                 <span asp-validation-for="time_open" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="time_close" class="control-label"></label>
-                <input asp-for="time_close" class="form-control" type="time" />
+                <input asp-for="time_close" class="form-control" />
                 <span asp-validation-for="time_close" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -74,14 +72,21 @@
                 <input asp-for="longitude" class="form-control" type="hidden" value="@Model.longitude" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Создать" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+@{
+    if (Model.dot_id != 0)
+    {
+    <div>
+        <a asp-action="DeleteDot" asp-route-id="@Model.dot_id">Удалить точку</a>
+    </div>
+    } 
+}
 <div>
-    <a asp-action="Index">Back to Map</a>
+    <a asp-action="Index">Вернуться на карту</a>
 </div>
 
 @section Scripts {

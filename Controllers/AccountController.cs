@@ -61,9 +61,8 @@ namespace MapsGuides.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.email);
                 var result =
-                    await _signInManager.PasswordSignInAsync(user, model.password, model.remember_me, false);
+                    await _signInManager.PasswordSignInAsync(model.email, model.password, model.remember_me, false);
                 if (result.Succeeded)
                 {
                     // проверяем, принадлежит ли URL приложению

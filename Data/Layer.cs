@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace MapsGuides.Data
 {
-    public class RegisterService
+    public class Layer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ClientID { get; set; }
-        public string ClientSecret { get; set; }
-        public List<User> Users { get; set; }
-        public RegisterService()
-        {
-            Users = new List<User>();
-        }
     }
 }

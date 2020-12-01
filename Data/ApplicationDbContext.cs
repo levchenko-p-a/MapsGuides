@@ -80,9 +80,11 @@ namespace MapsGuides.Data
                 new Categorie { id=4,created=DateTime.Now, name = "Услуги" }
             });
             modelBuilder.Entity<RegisterService>().HasData(new RegisterService[] {
-                new RegisterService { id = 1, name ="SOM"},
-                new RegisterService { id = 2, name ="Google"},
-                new RegisterService { id = 3, name ="Facebook"}
+                new RegisterService { Id = 1, Name ="SOM"},
+                new RegisterService { Id = 2, Name ="Google", ClientID="955437441941-sj9tjud9ofdk2jtarrv5optosoi9f040.apps.googleusercontent.com", ClientSecret="yvn-Afne1n3BQqZOPcXXQoDH"},
+                new RegisterService { Id = 3, Name ="Twitter"},
+                new RegisterService { Id = 4, Name ="Microsoft"},
+                new RegisterService { Id = 5, Name ="Facebook"}
                 });
         }
     }

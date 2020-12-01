@@ -50,7 +50,7 @@ function setDotCoord(map) {
         var actionUrl = '/Home/SetDot?data=' + encodeURIComponent(json);
         L.popup()
             .setLatLng(e.latlng)
-            .setContent('<a href="' + actionUrl +'" type="application/json" class="ui-btn ui-corner-all" >Add point to map</a>')
+            .setContent('<a href="' + actionUrl +'" type="application/json" class="ui-btn ui-corner-all" >Добавить точку на карту</a>')
             .openOn(map);
     });
 }
@@ -69,10 +69,10 @@ function getAllDots(map, search="") {
             var base_url = window.location.origin+"/";
             for (var i = 0; i < dots.length; i++) {
                 var d = dots[i];
-                d.thumbFile = base_url + d.thumbFile;
+                d.thumb_file = base_url + d.thumb_file;
                 var target = L.latLng(d.latitude, d.longitude);
                 var icon = L.icon({
-                    iconUrl: d.thumbFile,
+                    iconUrl: d.thumb_file,
                     iconSize: [40, 40]
                 });
 
@@ -107,11 +107,11 @@ function popupContent(d) {
     var content = 
         '<h2>' + d.title + '</h2>' +
         '<div>' + d.description + '</div>' +
-        '<a href="tel:' + d.phone + '" >Phone</a>' +
+        '<a href="tel:' + d.phone + '" >Позвонить</a>' +
         '<br>'+
-        '<a href="mailto:' + d.email + '" >Email</a>' +
-        '<img src="' + d.thumbFile + '" width="100" height="100" alt="image">' +
-    '<a href="' + editUrl + '" type="application/json" class="ui-btn ui-corner-all" >Edit</a>'
+        '<a href="mailto:' + d.email + '" >Написать на почту</a>' +
+        '<div><img src="' + d.thumb_file + '" width="200" height="200" alt="image"></div>' +
+    '<a href="' + editUrl + '" type="application/json" class="ui-btn ui-corner-all" >Изменить</a>'
     ;
     return content;
 }

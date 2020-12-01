@@ -31,6 +31,7 @@ namespace MapsGuides.Data
         public DateTime time_open { get; set; }
         public DateTime time_close { get; set; }
         public String website { get; set; }
+        public bool enabled { get; set; }
         public Double latitude { get; set; }
         public Double longitude { get; set; }
         public DateTime created { get; set; }
